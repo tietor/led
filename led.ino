@@ -3,43 +3,25 @@
 #ifdef _AVR_
 #include <avr/power.h>
 #endif
-#define PIN 8
-#define NUMPIXELS 8
+#define PIN STRIP_PIN
+#define NUMPIXELS STRIP_PIN
 # include <IRremote.h>
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-const int RECEIVER_PIN=11;
-const int STRIP_PIN=8;
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 int currentBrightness = 255;
 boolean executeMode = false;
 int lastPressedButton;
 int lastSelectedMode;
 
-const int BRIGHTNESS_UP_BUTTON = 70;
-const int BRIGHTNESS_DOWN_BUTTON = 21;
-const int OFF_BUTTON = 69;
-const int ON_BUTTON=71;
-
 const int MAX_BRIGHTNESS = 255;
 const int MIN_BRIGHTNESS = 55;
 const int BRIGTHNESS_LEVEL= 40;
 
-const int MODE_1 = 7;
-const int MODE_2 = 22;
-const int MODE_3 = 25;
-const int MODE_4 = 13;
-const int MODE_5 = 12;
-const int MODE_6 = 24;
-const int MODE_7 = 94;
-const int MODE_8 = 8;
-const int MODE_9 = 28;
-const int MODE_10 = 90;
-
 void setup() {
   Serial.begin(9600);
   IrReceiver.begin(RECEIVER_PIN);
-  pixels.begin();
+  strip.begin();
 }
 
 void loop() {
@@ -137,123 +119,123 @@ void clashPattern() {
   
   for (int k = 0 ; k < 4 ; ++k) {
     turnAllOff();
-    pixels.setPixelColor(0 + k, pixels.Color(0, 10, 10));
-    pixels.setPixelColor(7 - k, pixels.Color(0, 10, 10));
-    pixels.show();
+    strip.setPixelColor(0 + k, strip.Color(0, 10, 10));
+    strip.setPixelColor(7 - k, strip.Color(0, 10, 10));
+    strip.show();
     delay(50);
   }
 
   for (int k = 0 ; k < 4 ; ++k) {
     turnAllOff();
-    pixels.setPixelColor(3 - k, pixels.Color(0, 10, 10));
-    pixels.setPixelColor(4 + k, pixels.Color(0, 10, 10));
-    pixels.show();
+    strip.setPixelColor(3 - k, strip.Color(0, 10, 10));
+    strip.setPixelColor(4 + k, strip.Color(0, 10, 10));
+    strip.show();
     delay(50);
   }
 }
 
 void lightedStreetPattern() {
   for (int k = 0 ; k < 8 ; ++k) {
-    pixels.setPixelColor(0, pixels.Color(10, 10, 10));
-    pixels.setPixelColor(1, pixels.Color(0, 0, 10));
-    pixels.setPixelColor(2, pixels.Color(0, 10, 0));
-    pixels.setPixelColor(3, pixels.Color(0, 10, 10));
-    pixels.setPixelColor(4, pixels.Color(10, 0, 0));
-    pixels.setPixelColor(5, pixels.Color(10, 0, 10));
-    pixels.setPixelColor(6, pixels.Color(10, 10, 0));
-    pixels.setPixelColor(7, pixels.Color(10, 10, 10));
-    pixels.setPixelColor(k, pixels.Color(0, 0, 0));
-    pixels.show();
+    strip.setPixelColor(0, strip.Color(10, 10, 10));
+    strip.setPixelColor(1, strip.Color(0, 0, 10));
+    strip.setPixelColor(2, strip.Color(0, 10, 0));
+    strip.setPixelColor(3, strip.Color(0, 10, 10));
+    strip.setPixelColor(4, strip.Color(10, 0, 0));
+    strip.setPixelColor(5, strip.Color(10, 0, 10));
+    strip.setPixelColor(6, strip.Color(10, 10, 0));
+    strip.setPixelColor(7, strip.Color(10, 10, 10));
+    strip.setPixelColor(k, strip.Color(0, 0, 0));
+    strip.show();
     delay(100);
 
   }
 }
 
 void randomPattern() {
-    pixels.setPixelColor(0, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.setPixelColor(1, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.setPixelColor(2, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.setPixelColor(3, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.setPixelColor(4, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.setPixelColor(5, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.setPixelColor(6, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.setPixelColor(7, pixels.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    pixels.show();
+    strip.setPixelColor(0, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.setPixelColor(1, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.setPixelColor(2, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.setPixelColor(3, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.setPixelColor(4, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.setPixelColor(5, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.setPixelColor(6, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.setPixelColor(7, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+    strip.show();
     delay(100);
 }
 
 void fadePattern() {
   for (int k = 10 ; k > 0 ; --k) {
-    pixels.setPixelColor(0, pixels.Color(0, 0, k));
-    pixels.setPixelColor(1, pixels.Color(0, 0, k));
-    pixels.setPixelColor(2, pixels.Color(0, 0, k));
-    pixels.setPixelColor(3, pixels.Color(0, 0, k));
-    pixels.setPixelColor(4, pixels.Color(0, 0, k));
-    pixels.setPixelColor(5, pixels.Color(0, 0, k));
-    pixels.setPixelColor(6, pixels.Color(0, 0, k));
-    pixels.setPixelColor(7, pixels.Color(0, 0, k));
-    pixels.show();
+    strip.setPixelColor(0, strip.Color(0, 0, k));
+    strip.setPixelColor(1, strip.Color(0, 0, k));
+    strip.setPixelColor(2, strip.Color(0, 0, k));
+    strip.setPixelColor(3, strip.Color(0, 0, k));
+    strip.setPixelColor(4, strip.Color(0, 0, k));
+    strip.setPixelColor(5, strip.Color(0, 0, k));
+    strip.setPixelColor(6, strip.Color(0, 0, k));
+    strip.setPixelColor(7, strip.Color(0, 0, k));
+    strip.show();
     delay(100);
   }
   
 
   for (int i = 0 ; i < 10 ; ++i) {
-    pixels.setPixelColor(0, pixels.Color(0, 0, i));
-    pixels.setPixelColor(1, pixels.Color(0, 0, i));
-    pixels.setPixelColor(2, pixels.Color(0, 0, i));
-    pixels.setPixelColor(3, pixels.Color(0, 0, i));
-    pixels.setPixelColor(4, pixels.Color(0, 0, i));
-    pixels.setPixelColor(5, pixels.Color(0, 0, i));
-    pixels.setPixelColor(6, pixels.Color(0, 0, i));
-    pixels.setPixelColor(7, pixels.Color(0, 0, i));
-    pixels.show();
+    strip.setPixelColor(0, strip.Color(0, 0, i));
+    strip.setPixelColor(1, strip.Color(0, 0, i));
+    strip.setPixelColor(2, strip.Color(0, 0, i));
+    strip.setPixelColor(3, strip.Color(0, 0, i));
+    strip.setPixelColor(4, strip.Color(0, 0, i));
+    strip.setPixelColor(5, strip.Color(0, 0, i));
+    strip.setPixelColor(6, strip.Color(0, 0, i));
+    strip.setPixelColor(7, strip.Color(0, 0, i));
+    strip.show();
     delay(100);
   }
 }
 
 void unfoldPattern() {
   turnAllOff();
-  pixels.show();
+  strip.show();
   delay(100);
 
   greenLED(3);
   greenLED(4);
-  pixels.show();
+  strip.show();
   delay(100);
 
   redLED(2);
   redLED(5);
-  pixels.show();
+  strip.show();
   delay(100);
 
   blueLED(1);
   blueLED(6);
-  pixels.show();
+  strip.show();
   delay(100);
 
   whiteLED(0);
   whiteLED(7);
-  pixels.show();
+  strip.show();
   delay(100);
 
   turnOffLED(0);
   turnOffLED(7);
-  pixels.show();
+  strip.show();
   delay(100);
 
   turnOffLED(1);
   turnOffLED(6);
-  pixels.show();
+  strip.show();
   delay(100);
 
   turnOffLED(2);
   turnOffLED(5);
-  pixels.show();
+  strip.show();
   delay(100);
 
   turnOffLED(3);
   turnOffLED(4);
-  pixels.show();
+  strip.show();
   delay(300);
 }
 
@@ -266,7 +248,7 @@ void blinkPattern() {
   redLED(5);
   turnOffLED(6);
   redLED(7);
-  pixels.show();
+  strip.show();
   delay(200);
 
   blueLED(0);
@@ -277,7 +259,7 @@ void blinkPattern() {
   turnOffLED(5);
   blueLED(6);
   turnOffLED(7);
-  pixels.show();
+  strip.show();
   delay(200);
   
   turnOffLED(0);
@@ -288,7 +270,7 @@ void blinkPattern() {
   whiteLED(5);
   turnOffLED(6);
   whiteLED(7);
-  pixels.show();
+  strip.show();
   delay(200);
   
   greenLED(0);
@@ -299,7 +281,7 @@ void blinkPattern() {
   turnOffLED(5);
   greenLED(6);
   turnOffLED(7);
-  pixels.show();
+  strip.show();
   delay(200);
 }
 
@@ -317,7 +299,7 @@ void chasePattern() {
     chase_1[1] = increment(chase_1[1]);
     chase_2[0] = increment(chase_2[0]);
     chase_2[1] = increment(chase_2[1]);
-    pixels.show();
+    strip.show();
     delay(200);
   }
 }
@@ -336,84 +318,84 @@ void streetPattern() {
   // first
   turnAllOff();
   redLED(0);
-  pixels.show();
+  strip.show();
   delay(100);
 
   // second
   turnAllOff();
   greenLED(1);
-  pixels.show();
+  strip.show();
   delay(100);
 
   // third
   turnAllOff();
   blueLED(2);
-  pixels.show();
+  strip.show();
   delay(100);
 
   // fourth
   turnAllOff();
   whiteLED(3);
-  pixels.show();
+  strip.show();
   delay(100);
 
   // fith
   turnAllOff();
   whiteLED(4);
-  pixels.show();
+  strip.show();
   delay(100);
 
   // sixth
   turnAllOff();
   blueLED(5);
-  pixels.show();
+  strip.show();
   delay(100);
 
   // seventh
   turnAllOff();
   greenLED(6);
-  pixels.show();
+  strip.show();
   delay(100);
 
   // eight
   turnAllOff();
   redLED(7);
-  pixels.show();
+  strip.show();
   delay(100);
 }
 
 void whiteLED(int ledNr) {
-  pixels.setPixelColor(ledNr, pixels.Color(10, 10, 10));
+  strip.setPixelColor(ledNr, strip.Color(10, 10, 10));
 }
 
 void redLED(int ledNr) {
-  pixels.setPixelColor(ledNr, pixels.Color(10, 0, 0));
+  strip.setPixelColor(ledNr, strip.Color(10, 0, 0));
 }
 
 void greenLED(int ledNr) {
-  pixels.setPixelColor(ledNr, pixels.Color(0, 10, 0));
+  strip.setPixelColor(ledNr, strip.Color(0, 10, 0));
 }
 
 void blueLED(int ledNr) {
-  pixels.setPixelColor(ledNr, pixels.Color(0, 0, 10));
+  strip.setPixelColor(ledNr, strip.Color(0, 0, 10));
 }
 
 void turnAllOff() {
   for (int i = 0 ; i < 8 ; i++) {
     turnOffLED(i);
   }
-  pixels.show();
+  strip.show();
 }
 
 void turnOffLED(int ledNr) {
-  pixels.setPixelColor(ledNr, pixels.Color(0, 0, 0));
+  strip.setPixelColor(ledNr, strip.Color(0, 0, 0));
 }
 
 void brightnessUp() {
   int newBrightness = currentBrightness + BRIGTHNESS_LEVEL;
   if (newBrightness <= MAX_BRIGHTNESS) {
-    pixels.setBrightness(newBrightness);
-    pixels.show();
+    strip.setBrightness(newBrightness);
+    strip.show();
     currentBrightness = newBrightness;
   }
 }
@@ -424,8 +406,8 @@ void brightnessDown() {
   Serial.println(currentBrightness);
   Serial.println(newBrightness);
   if (newBrightness >= MIN_BRIGHTNESS) {
-    pixels.setBrightness(newBrightness);
-    pixels.show();
+    strip.setBrightness(newBrightness);
+    strip.show();
     currentBrightness = newBrightness;
   }
 }
