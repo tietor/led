@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+#include "led_config.h"
 #ifdef _AVR_
 #include <avr/power.h>
 #endif
