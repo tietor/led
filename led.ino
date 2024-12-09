@@ -5,7 +5,7 @@
 #endif
 #define PIN STRIP_PIN
 #define NUMPIXELS STRIP_PIN
-# include <IRremote.h>
+#include <IRremote.h>
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -25,6 +25,11 @@ void setup() {
 }
 
 void loop() {
+  handleButtonClick();
+  handleModeExecution();
+}
+
+void handleButtonClick() {
   if (IrReceiver.decode()) {
     delay(200);
     IrReceiver.resume();
@@ -33,83 +38,67 @@ void loop() {
       case OFF_BUTTON:
         turnAllOff();
         executeMode = false;
-        Serial.println("Off button pressed");
         break;
       case ON_BUTTON:
+        lastPressedButton = lastSelectedMode;
         executeMode = true;
-        Serial.println("On button pressed");
         break;
       case BRIGHTNESS_UP_BUTTON:
         if (executeMode) {
           brightnessUp();
-          Serial.println("Brighness up");
+          lastPressedButton = lastSelectedMode;
         }
         break;
       case BRIGHTNESS_DOWN_BUTTON:
         if (executeMode) {
           brightnessDown();
-          Serial.println("Brightness down");
+          lastPressedButton = lastSelectedMode;
         }
         break;
     }
-  } else if (executeMode) {
+  }
+}
+
+void handleModeExecution() {
+  if (executeMode) {
     switch (lastPressedButton) {
       case MODE_1:
         lastSelectedMode = MODE_1;
-        Serial.println("mode 1");
         chasePattern();
         break;
       case MODE_2:
         lastSelectedMode = MODE_2;
-        Serial.println("mode 2");
         streetPattern();
         break;
       case MODE_3:
         lastSelectedMode = MODE_3;
-        Serial.println("mode 3");
         blinkPattern();
         break;
       case MODE_4:
         lastSelectedMode = MODE_4;
-        Serial.println("mode 4");
         unfoldPattern();
         break;
       case MODE_5:
         lastSelectedMode = MODE_5;
-        Serial.println("mode 5");
         fadePattern();
         break;
       case MODE_6:
         lastSelectedMode = MODE_6;
-        Serial.println("mode 6");
         randomPattern();
         break;
       case MODE_7:
         lastSelectedMode = MODE_7;
-        Serial.println("mode 7");
         lightedStreetPattern();
         break;
       case MODE_8:
         lastSelectedMode = MODE_8;
-        Serial.println("mode 8");
         clashPattern();
         break;
       case MODE_9:
         lastSelectedMode = MODE_9;
-        Serial.println("mode 9");
         break;
       case MODE_10:
         lastSelectedMode = MODE_10;
-        Serial.println("mode 10");
-        break;
-      case ON_BUTTON:
-        lastPressedButton = lastSelectedMode;
-        break;
-      case BRIGHTNESS_DOWN_BUTTON:
-        lastPressedButton = lastSelectedMode;
-        break;
-      case BRIGHTNESS_UP_BUTTON:
-        lastPressedButton = lastSelectedMode;
         break;
     }
   }
@@ -395,19 +384,14 @@ void brightnessUp() {
   int newBrightness = currentBrightness + BRIGTHNESS_LEVEL;
   if (newBrightness <= MAX_BRIGHTNESS) {
     strip.setBrightness(newBrightness);
-    strip.show();
     currentBrightness = newBrightness;
   }
 }
 
 void brightnessDown() {
   int newBrightness = currentBrightness - BRIGTHNESS_LEVEL;
-  Serial.println("current brightness: ");
-  Serial.println(currentBrightness);
-  Serial.println(newBrightness);
   if (newBrightness >= MIN_BRIGHTNESS) {
     strip.setBrightness(newBrightness);
-    strip.show();
     currentBrightness = newBrightness;
   }
 }
