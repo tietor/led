@@ -24,12 +24,14 @@ const byte COLOR_ARRAY[][3] = {
     {10, 10, 0},
     {10, 10, 10}
   };
-int slimRandomLighedLEDs[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+int slimRandomLightedLEDs[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 
 const int MAX_BRIGHTNESS = 255;
 const int MIN_BRIGHTNESS = 55;
 const int BRIGTHNESS_LEVEL= 40;
+const int MAX_LED_POSITION = 7;
+const int MIN_LED_POSITION = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -123,8 +125,10 @@ void clashPattern() {
   
   for (int k = 0 ; k < 4 ; ++k) {
     turnAllOff();
-    strip.setPixelColor(0 + k, strip.Color(0, 10, 10));
-    strip.setPixelColor(7 - k, strip.Color(0, 10, 10));
+    int lowerLightedLed = MIN_LED_POSITION + k;
+    int upperLightedLed = MAX_LED_POSITION - k;
+    strip.setPixelColor(upperLightedLed, strip.Color(0, 10, 10));
+    strip.setPixelColor(lowerLightedLed, strip.Color(0, 10, 10));
     strip.show();
     delay(50);
   }
@@ -139,7 +143,7 @@ void clashPattern() {
 }
 
 void lightedStreetPattern() {
-  for (int k = 0 ; k < 8 ; ++k) {
+  for (int ledToTurnOff = 0 ; ledToTurnOff < 8 ; ++ledToTurnOff) {
     strip.setPixelColor(0, strip.Color(10, 10, 10));
     strip.setPixelColor(1, strip.Color(0, 0, 10));
     strip.setPixelColor(2, strip.Color(0, 10, 0));
@@ -148,7 +152,7 @@ void lightedStreetPattern() {
     strip.setPixelColor(5, strip.Color(10, 0, 10));
     strip.setPixelColor(6, strip.Color(10, 10, 0));
     strip.setPixelColor(7, strip.Color(10, 10, 10));
-    strip.setPixelColor(k, strip.Color(0, 0, 0));
+    strip.setPixelColor(ledToTurnOff, strip.Color(0, 0, 0));
     strip.show();
     delay(100);
 
@@ -156,42 +160,27 @@ void lightedStreetPattern() {
 }
 
 void randomPattern() {
-    strip.setPixelColor(0, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.setPixelColor(1, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.setPixelColor(2, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.setPixelColor(3, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.setPixelColor(4, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.setPixelColor(5, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.setPixelColor(6, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.setPixelColor(7, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
-    strip.show();
-    delay(100);
+  for(int ledNr = 0; ledNr < 8; ledNr ++) {
+    strip.setPixelColor(ledNr, strip.Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor()));
+  }
+  strip.show();
+  delay(100);
 }
 
 void fadePattern() {
-  for (int k = 10 ; k > 0 ; --k) {
-    strip.setPixelColor(0, strip.Color(0, 0, k));
-    strip.setPixelColor(1, strip.Color(0, 0, k));
-    strip.setPixelColor(2, strip.Color(0, 0, k));
-    strip.setPixelColor(3, strip.Color(0, 0, k));
-    strip.setPixelColor(4, strip.Color(0, 0, k));
-    strip.setPixelColor(5, strip.Color(0, 0, k));
-    strip.setPixelColor(6, strip.Color(0, 0, k));
-    strip.setPixelColor(7, strip.Color(0, 0, k));
+  for (int blueIntensity = 10 ; blueIntensity > 0 ; --blueIntensity) {
+    for(int ledNr = 0; ledNr < 8; ledNr ++) {
+      strip.setPixelColor(ledNr, strip.Color(0, 0, blueIntensity));
+    }
     strip.show();
     delay(100);
   }
   
 
-  for (int i = 0 ; i < 10 ; ++i) {
-    strip.setPixelColor(0, strip.Color(0, 0, i));
-    strip.setPixelColor(1, strip.Color(0, 0, i));
-    strip.setPixelColor(2, strip.Color(0, 0, i));
-    strip.setPixelColor(3, strip.Color(0, 0, i));
-    strip.setPixelColor(4, strip.Color(0, 0, i));
-    strip.setPixelColor(5, strip.Color(0, 0, i));
-    strip.setPixelColor(6, strip.Color(0, 0, i));
-    strip.setPixelColor(7, strip.Color(0, 0, i));
+  for (int blueIntensity = 0 ; blueIntensity < 10 ; ++blueIntensity) {
+    for(int ledNr = 0; ledNr < 8; ledNr ++) {
+      strip.setPixelColor(ledNr, strip.Color(0, 0, blueIntensity));  
+    }
     strip.show();
     delay(100);
   }
@@ -290,26 +279,26 @@ void blinkPattern() {
 }
 
 void chasePattern() {
-  int chase_1[] = {0, 1};
-  int chase_2[] = {4, 5};
+  int chase1[] = {0, 1};
+  int chase2[] = {4, 5};
  
   for (int i = 0 ; i < 5 ; ++i) {
     turnAllOff();
-    greenLED(chase_1[0]);
-    greenLED(chase_1[1]);
-    greenLED(chase_2[0]);
-    greenLED(chase_2[1]);
-    chase_1[0] = increment(chase_1[0]);
-    chase_1[1] = increment(chase_1[1]);
-    chase_2[0] = increment(chase_2[0]);
-    chase_2[1] = increment(chase_2[1]);
+    greenLED(chase1[0]);
+    greenLED(chase1[1]);
+    greenLED(chase2[0]);
+    greenLED(chase2[1]);
+    chase1[0] = increment(chase1[0]);
+    chase1[1] = increment(chase1[1]);
+    chase2[0] = increment(chase2[0]);
+    chase2[1] = increment(chase2[1]);
     strip.show();
     delay(200);
   }
 }
  
 int increment(int ledNumber) {
-  if (ledNumber == 7) {
+  if (ledNumber == MAX_LED_POSITION) {
     return 0;
   }
  
@@ -317,8 +306,6 @@ int increment(int ledNumber) {
 }
 
 void streetPattern() {
-  int ledsToTurnOff[] = {0, 1, 2, 3, 4, 5, 6, 7};
-
   // first
   turnAllOff();
   redLED(0);
@@ -370,19 +357,19 @@ void streetPattern() {
 
 void slimRandomPattern() {
   int lightToChange = random(0, 8);
-  if (slimRandomLighedLEDs[lightToChange] == 0) {
-    slimRandomLighedLEDs[lightToChange] = 1;
+  if (slimRandomLightedLEDs[lightToChange] == 0) {
+    slimRandomLightedLEDs[lightToChange] = 1;
   }
   else {
-    slimRandomLighedLEDs[lightToChange] = 0;
+    slimRandomLightedLEDs[lightToChange] = 0;
   }
  
-  for (int k = 0 ; k < 8 ; ++k) {
-    if (slimRandomLighedLEDs[k] == 0) {
-      strip.setPixelColor(k, strip.Color(0, 0, 0));
+  for (int ledNr = 0 ; ledNr < 8 ; ++ledNr) {
+    if (slimRandomLightedLEDs[ledNr] == 0) {
+      strip.setPixelColor(ledNr, strip.Color(0, 0, 0));
     }
     else {
-      strip.setPixelColor(k, strip.Color(0, 10, 0));
+      strip.setPixelColor(ledNr, strip.Color(0, 10, 0));
     }
   }
   strip.show();
@@ -421,8 +408,8 @@ void blueLED(int ledNr) {
 }
 
 void turnAllOff() {
-  for (int i = 0 ; i < 8 ; i++) {
-    turnOffLED(i);
+  for (int ledNr = 0 ; ledNr < 8 ; ledNr++) {
+    turnOffLED(ledNr);
   }
   strip.show();
 }
