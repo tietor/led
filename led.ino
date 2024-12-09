@@ -13,6 +13,19 @@ int currentBrightness = 255;
 boolean executeMode = false;
 int lastPressedButton;
 int lastSelectedMode;
+int colorOverrideCurrentColor = 0;
+const byte COLOR_ARRAY[][3] = {
+    {0, 0, 0},
+    {0, 0, 10},
+    {0, 10, 0},
+    {0, 10, 10},
+    {10, 0, 0},
+    {10, 0, 10},
+    {10, 10, 0},
+    {10, 10, 10}
+  };
+int slimRandomLighedLEDs[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+
 
 const int MAX_BRIGHTNESS = 255;
 const int MIN_BRIGHTNESS = 55;
@@ -96,9 +109,11 @@ void handleModeExecution() {
         break;
       case MODE_9:
         lastSelectedMode = MODE_9;
+        slimRandomPattern();
         break;
       case MODE_10:
         lastSelectedMode = MODE_10;
+        colorOverridePattern();
         break;
     }
   }
@@ -351,6 +366,42 @@ void streetPattern() {
   redLED(7);
   strip.show();
   delay(100);
+}
+
+void slimRandomPattern() {
+  int lightToChange = random(0, 8);
+  if (slimRandomLighedLEDs[lightToChange] == 0) {
+    slimRandomLighedLEDs[lightToChange] = 1;
+  }
+  else {
+    slimRandomLighedLEDs[lightToChange] = 0;
+  }
+ 
+  for (int k = 0 ; k < 8 ; ++k) {
+    if (slimRandomLighedLEDs[k] == 0) {
+      strip.setPixelColor(k, strip.Color(0, 0, 0));
+    }
+    else {
+      strip.setPixelColor(k, strip.Color(0, 10, 0));
+    }
+  }
+  strip.show();
+  delay(100);
+}
+ 
+void colorOverridePattern() {
+    int col1 = COLOR_ARRAY[colorOverrideCurrentColor][0];
+    int col2 = COLOR_ARRAY[colorOverrideCurrentColor][1];
+    int col3 = COLOR_ARRAY[colorOverrideCurrentColor][2];
+    for (int k = 0 ; k < 8 ; ++k) {
+      strip.setPixelColor(k, col1, col2, col3);
+      strip.show();
+      delay(100);
+    }
+    colorOverrideCurrentColor++;
+    if (colorOverrideCurrentColor > 8) {
+      colorOverrideCurrentColor = 0;
+    }
 }
 
 void whiteLED(int ledNr) {
